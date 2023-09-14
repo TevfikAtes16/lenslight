@@ -33,7 +33,7 @@ const createPhoto = async (req, res) => {
 }
 const getAllPhotos = async (req, res) => {
     try {
-        const photos = await Photo.find({}).lean();
+        const photos = await Photo.find({ user : {$ne : res.locals.user._id}}).lean();
         res.status(200).render('photos',{
             photos,
             link:"photos"
@@ -47,7 +47,9 @@ const getAllPhotos = async (req, res) => {
 }
 const getAPhoto = async (req, res) => {
     try {
-        const photo = await Photo.findById({ _id : req.params.id}).populate("user");
+        let id = mongoose.Types.ObjectId('req.params.id');
+
+        const photo = await Photo.findById({ _id : id }).exec().lean().populate('user');
         res.status(200).render('photo',{
             photo,
             link:"photos"

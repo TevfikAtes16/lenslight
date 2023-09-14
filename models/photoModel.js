@@ -11,7 +11,7 @@ const photoSchema = new Schema({
     description: {
         type: String,
         required: true,
-        trim: true,
+        trim: true
     },
     uploadedAt: {
         type: Date,

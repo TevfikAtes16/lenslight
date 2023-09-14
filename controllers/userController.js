@@ -80,8 +80,43 @@ const getDashboardPage = async(req,res) => {
     });
 }
 
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({ _id : {$ne : res.locals.user._id} }).exec().lean();
+        res.status(200).render('users',{
+            users,
+            link:"users"
+        });
+    } catch (error) {
+        res.status(500).json({
+            succeded:false,
+            error
+        });
+    }
+}
+
+const getAUser = async (req, res) => {
+    try {
+        // let id = mongoose.Types.ObjectId('req.params.id');
+        const user = await User.findById({ _id : req.params.id}).exec().lean();
+        const photos = await Photo.findById({ user: res.locals.user._id }).lean();
+        res.status(200).render('user',{
+            user,
+            photos,
+            link:"users"
+        });
+    } catch (error) {
+        res.status(500).json({
+            succeded:false,
+            error
+        });
+    }
+}
+
 export {
    createUser,
    loginUser,
-   getDashboardPage
+   getDashboardPage,
+   getAllUsers,
+   getAUser
 };
